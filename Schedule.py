@@ -1,29 +1,42 @@
 import mysql.connector
 
+
 def get_database_connection():
-    connection = mysql.connector.connect(user='syonr',
-                                         password='232887372',
-                                         host='10.8.37.226',
-                                         database='syonr_db')
-    return connection
+   connection = mysql.connector.connect(user='syonr',
+                                        password='232887372',
+                                        host='10.8.37.226',
+                                        database='syonr_db')
+   return connection
+
 
 def execute_statement(connection, statement):
-    cursor = connection.cursor()
-    cursor.execute(statement)
-    results = []
+   cursor = connection.cursor()
+   cursor.execute(statement)
+   results = []
 
-    for row in cursor:
-        results.append(row)
 
-    cursor.close()
-    connection.close()
+   for row in cursor:
+       results.append(row)
+
+
+   cursor.close()
+   connection.close()
+
+   return results
+
 
 def get_student_schedule(student_id):
-    statement = "CALL Get_Student_Schedule(" + student_id + ")"
-    return execute_statement(get_database_connection(), statement)
+   statement = "CALL Get_Student_Schedule(" + str(student_id) + ")"
+   return execute_statement(get_database_connection(), statement)
+
 
 student_id = input("Enter Student ID: ")
-output = get_student_schedule(student_id)
+outputs = get_student_schedule(student_id)
 
-for result in output:
 
+for result in outputs:
+   print("Period: " + str(result[0]))
+   print("Course: " + str(result[1]))
+   print("Room: " + str(result[2]))
+   print("Teacher: " + str(result[3]))
+   print()
