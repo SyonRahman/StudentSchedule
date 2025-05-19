@@ -25,18 +25,31 @@ def execute_statement(connection, statement):
    return results
 
 
+
 def get_student_schedule(student_id):
    statement = "CALL Get_Student_Schedule(" + str(student_id) + ")"
    return execute_statement(get_database_connection(), statement)
 
+def student_operations(student_id, operation, schedule):
+    if operation == "schedule":
+        statement = "SELECT * FROM StudentSchedule WHERE student_id = " + str(student_id)
+        return execute_statement(get_database_connection(), statement)
+    else
 
-student_id = input("Enter Student ID: ")
-outputs = get_student_schedule(student_id)
+
+def get_student_grades(student_id):
+def teacher_operations(teacher_id, schedule, ):
 
 
-for result in outputs:
-   print("Period: " + str(result[0]))
-   print("Course: " + str(result[1]))
-   print("Room: " + str(result[2]))
-   print("Teacher: " + str(result[3]))
-   print()
+
+
+# student_id = input("Enter Student ID: ")
+# outputs = get_student_schedule(student_id)
+#
+#
+# for result in outputs:
+#    print("Period: " + str(result[0]))
+#    print("Course: " + str(result[1]))
+#    print("Room: " + str(result[2]))
+#    print("Teacher: " + str(result[3]))
+#    print()
