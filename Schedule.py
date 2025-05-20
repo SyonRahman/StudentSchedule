@@ -32,14 +32,26 @@ def get_student_schedule(student_id):
 
 def student_operations(student_id, operation, schedule):
     if operation == "schedule":
-        statement = "SELECT * FROM StudentSchedule WHERE student_id = " + str(student_id)
-        return execute_statement(get_database_connection(), statement)
-    else
+        get_student_schedule(student_id)
+    if operation == "class_grade":
 
 
-def get_student_grades(student_id):
-def teacher_operations(teacher_id, schedule, ):
 
+
+#def get_student_grades(student_id):
+
+#def teacher_operations(teacher_id, schedule):
+
+logged_in = True
+while logged_in == True:
+    type = input("Welcome. Are you a \nStudent\nTeacher\nAdministrator\n")
+    type.lower()
+    if type == "student":
+        student_id = input("What is your student id?")
+        student_operations(student_id)
+        operation = input("Which operation do you want to perform. Select one"
+                          "\nschedule\nclass_grade\noverall_grade")
+    elif type == "teacher":
 
 
 
