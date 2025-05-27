@@ -19,6 +19,7 @@ def execute_statement(connection, statement):
        results.append(row)
 
 
+
    cursor.close()
    connection.close()
 
@@ -42,7 +43,30 @@ def student_operations(student_id, operation):
         class_id = input("Select which class you want grades from with the class_id\n")
         grade_statement = "CALL Get_Class_Grade(" + str(student_id) + "," + str(class_id) + ")"
         return execute_statement(get_database_connection(), grade_statement)
+    else:
+        print("So you want to check your total average for all classes. Here are the ways that your grade works")
+        print("Minor Assignments are 30% of your grade."
+              "\nMajor Assignments are 70% of your grade."
+              "\nIf you course is an AP you get a 10% overall boost.")
 
+
+
+def get_grades(connection, statement):
+    cursor = connection.cursor()
+    cursor.execute(statement)
+    results = []
+
+    for row in cursor:
+        results.append(row)
+
+    cursor.close()
+    connection.close()
+
+    grades = []
+    for row in results:
+        grades.append(row[2])
+
+    return grades
 def teacher_operations(teacher_id, operation):
     if operation == "1":
         get_teacher_schedule(teacher_id)
