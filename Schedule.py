@@ -43,30 +43,35 @@ def student_operations(student_id, operation):
         class_id = input("Select which class you want grades from with the class_id\n")
         grade_statement = "CALL Get_Class_Grade(" + str(student_id) + "," + str(class_id) + ")"
         return execute_statement(get_database_connection(), grade_statement)
-    else:
+    elif operation == "3":
         print("So you want to check your total average for all classes. Here are the ways that your grade works")
         print("Minor Assignments are 30% of your grade."
               "\nMajor Assignments are 70% of your grade."
               "\nIf you course is an AP you get a 10% overall boost.")
+        overall_grades = "CAll Get_All_Assignments(" + str(student_id) + ")"
+        total_grade = get_grades(execute_statement(get_database_connection(), overall_grades))
+        print("Your overall grade for all courses is " + str(total_grade))
 
 
 
-def get_grades(connection, statement):
-    cursor = connection.cursor()
-    cursor.execute(statement)
-    results = []
+def get_grades(assignments):
+    overall_grade = 0
+    for assignment in assignments:
+        if assignment[3] == "minor":
+            assignment_grade = 0.3 * assignment[2]
+            if assignment[1] == "AP":
+                assignment_grade *= 1.1
+            overall_grade += assignment_grade
+        elif assignment[3] == "major":
+            assignment_grade = 0.7 * assignment[2]
+            if assignment[1] == "AP":
+                assignment_grade *= 1.1
+        overall_grade += assignment_grade
+    number_of_assignments = len(assignments)
+    return overall_grade / number_of_assignments
 
-    for row in cursor:
-        results.append(row)
 
-    cursor.close()
-    connection.close()
 
-    grades = []
-    for row in results:
-        grades.append(row[2])
-
-    return grades
 def teacher_operations(teacher_id, operation):
     if operation == "1":
         get_teacher_schedule(teacher_id)
@@ -85,16 +90,15 @@ logged_in = True
 while logged_in == True:
     type = input("Welcome. Are you a \n1. Student"
                  "\n2. Teacher"
-                 "\n3. Administrator\n")
-    type.lower()
-    if type == "student":
+                 "\n3. Administrator\nEnter the Number that corresponds\n")
+    if type == "1":
         student_id = input("What is your student id?\n")
         operation = input("Which operation do you want to perform? Select the number that corresponds with the operation"
                           "\n1. Schedule"
                           "\n2. Class Grade"
                           "\n3. Overall Grade\n")
         student_operations(student_id, operation)
-    elif type == "teacher":
+    elif type == "2":
         teacher_id = input("What is your teacher id?")
         operation = input("Which operation do you want to perform? Select the number that corresponds with the operation"
                           "\n1. Schedule"
