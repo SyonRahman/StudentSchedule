@@ -29,11 +29,27 @@ def execute_statement(connection, statement):
 
 def get_student_schedule(student_id):
    statement = "CALL Get_Student_Schedule(" + str(student_id) + ")"
-   return execute_statement(get_database_connection(), statement)
+   student_schedule = execute_statement(get_database_connection(), statement)
+   for period in student_schedule:
+       print("Class ID: " + str(period[0]))
+       print("Period: " + str(period[1]))
+       print("Course Name: " + str(period[2]))
+       print("Room Number: " + str(period[3]))
+       print("Name: " + str(period[4]))
+       print()
+   return student_schedule
 
 def get_teacher_schedule(teacher_id):
    statement = "CALL Get_Teacher_Schedule(" + str(teacher_id) + ")"
-   return execute_statement(get_database_connection(), statement)
+   teacher_schedule = execute_statement(get_database_connection(), statement)
+   for period in teacher_schedule:
+       print("Class ID: " + str(period[0]))
+       print("Period: " + str(period[1]))
+       print("Course Name: " + str(period[2]))
+       print("Room Number: " + str(period[3]))
+       print("Name: " + str(period[4]))
+       print()
+   return teacher_schedule
 
 def student_operations(student_id, operation):
     if operation == "1":
@@ -42,7 +58,10 @@ def student_operations(student_id, operation):
         get_student_schedule(student_id)
         class_id = input("Select which class you want grades from with the class_id\n")
         grade_statement = "CALL Get_Class_Grade(" + str(student_id) + "," + str(class_id) + ")"
-        return execute_statement(get_database_connection(), grade_statement)
+        class_grades = execute_statement(get_database_connection(), grade_statement)
+        for row in class_grades:
+            print("Assignment ID: " + str(row[1]))
+            print("Assignment Grade: " + str(row[2]))
     elif operation == "3":
         print("So you want to check your total average for all classes. Here are the ways that your grade works")
         print("Minor Assignments are 30% of your grade."
@@ -77,10 +96,15 @@ def teacher_operations(teacher_id, operation):
         get_teacher_schedule(teacher_id)
     elif operation == "2":
         get_teacher_schedule(teacher_id)
-        class_id = input("Select which class you want to see assignment grades from!\n")
-        assignment_id = input("Select which assignment you want to see the student grades from")
+        class_id = input("Select which class ID you want to see assignment grades from!\n")
+        assignment_id = input("Select which assignment ID you want to see the student grades from\n")
         grade_statement = "CALL Get_Student_Grades(" + str(class_id) + "," + str(assignment_id) + ")"
-        return execute_statement(get_database_connection(), grade_statement)
+        student_grades = execute_statement(get_database_connection(), grade_statement)
+        for row in student_grades:
+            print("Student ID: " + str(row[0]))
+            print("Grade: " + str(row[1]))
+            print()
+        return student_grades
 
 
 
@@ -99,7 +123,7 @@ while logged_in == True:
                           "\n3. Overall Grade\n")
         student_operations(student_id, operation)
     elif type == "2":
-        teacher_id = input("What is your teacher id?")
+        teacher_id = input("What is your teacher id?\n")
         operation = input("Which operation do you want to perform? Select the number that corresponds with the operation"
                           "\n1. Schedule"
                           "\n2. Check All Student Grades\n")
