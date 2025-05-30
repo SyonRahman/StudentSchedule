@@ -75,20 +75,26 @@ def student_operations(student_id, operation):
 
 
 def get_grades(assignments):
-    overall_grade = 0
+    number_of_assignments = len(assignments)
+    minor_grade = 0
+    major_grade = 0
     for assignment in assignments:
         if assignment[3] == "minor":
-            assignment_grade = 0.3 * assignment[2]
+            assignment_grade = assignment[2]
             if assignment[1] == "AP":
                 assignment_grade *= 1.1
-            overall_grade += assignment_grade
+            minor_grade += assignment_grade
         elif assignment[3] == "major":
-            assignment_grade = 0.7 * assignment[2]
+            assignment_grade = assignment[2]
             if assignment[1] == "AP":
                 assignment_grade *= 1.1
-        overall_grade += assignment_grade
-    number_of_assignments = len(assignments)
-    return overall_grade / number_of_assignments
+            major_grade += assignment_grade
+    minor_grade *= 0.3
+    minor_grade /= number_of_assignments
+    major_grade *= 0.7
+    major_grade /= number_of_assignments
+    overall_grade = major_grade + minor_grade
+    return overall_grade
 
 
 
@@ -131,14 +137,3 @@ while logged_in == True:
         teacher_operations(teacher_id, operation)
 
 
-
-# student_id = input("Enter Student ID: ")
-# outputs = get_student_schedule(student_id)
-#
-#
-# for result in outputs:
-#    print("Period: " + str(result[0]))
-#    print("Course: " + str(result[1]))
-#    print("Room: " + str(result[2]))
-#    print("Teacher: " + str(result[3]))
-#    print()
