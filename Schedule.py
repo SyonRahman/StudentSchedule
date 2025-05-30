@@ -75,7 +75,8 @@ def student_operations(student_id, operation):
 
 
 def get_grades(assignments):
-    number_of_assignments = len(assignments)
+    minor_grades = []
+    major_grades = []
     minor_grade = 0
     major_grade = 0
     for assignment in assignments:
@@ -84,15 +85,17 @@ def get_grades(assignments):
             if assignment[1] == "AP":
                 assignment_grade *= 1.1
             minor_grade += assignment_grade
+            minor_grades.append(assignment)
         elif assignment[3] == "major":
             assignment_grade = assignment[2]
             if assignment[1] == "AP":
                 assignment_grade *= 1.1
             major_grade += assignment_grade
+            major_grades.append(assignment)
     minor_grade *= 0.3
-    minor_grade /= number_of_assignments
+    minor_grade /= len(minor_grades)
     major_grade *= 0.7
-    major_grade /= number_of_assignments
+    major_grade /= len(major_grades)
     overall_grade = major_grade + minor_grade
     return overall_grade
 
