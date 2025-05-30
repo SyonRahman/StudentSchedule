@@ -62,6 +62,7 @@ def student_operations(student_id, operation):
         for row in class_grades:
             print("Assignment ID: " + str(row[1]))
             print("Assignment Grade: " + str(row[2]))
+            print()
     elif operation == "3":
         print("So you want to check your total average for all classes. Here are the ways that your grade works")
         print("Minor Assignments are 30% of your grade."
