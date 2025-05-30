@@ -1,3 +1,5 @@
+import math
+
 import mysql.connector
 
 
@@ -67,10 +69,10 @@ def student_operations(student_id, operation):
         print("So you want to check your total average for all classes. Here are the ways that your grade works")
         print("Minor Assignments are 30% of your grade."
               "\nMajor Assignments are 70% of your grade."
-              "\nIf you course is an AP you get a 10% overall boost.")
+              "\nIf you course is an AP you get a 10% overall boost.\n")
         overall_grades = "CAll Get_All_Assignments(" + str(student_id) + ")"
         total_grade = get_grades(execute_statement(get_database_connection(), overall_grades))
-        print("Your overall grade for all courses is " + str(total_grade))
+        print("Your overall grade rounded up for all courses is " + str(total_grade))
 
 
 
@@ -97,7 +99,7 @@ def get_grades(assignments):
     major_grade *= 0.7
     major_grade /= len(major_grades)
     overall_grade = major_grade + minor_grade
-    return overall_grade
+    return math.ceil(overall_grade)
 
 
 
@@ -107,6 +109,12 @@ def teacher_operations(teacher_id, operation):
     elif operation == "2":
         get_teacher_schedule(teacher_id)
         class_id = input("Select which class ID you want to see assignment grades from!\n")
+        print("Here are a list of Assignment IDS from the class.")
+        assignment_query = "CALL Get_Assignment_IDS(" + str(class_id) + ")"
+        assignment_ids = execute_statement(get_database_connection(), assignment_query)
+        for assignment_id in assignment_ids:
+            print("Assignment ID: " + str(assignment_id[0]))
+            print()
         assignment_id = input("Select which assignment ID you want to see the student grades from\n")
         grade_statement = "CALL Get_Student_Grades(" + str(class_id) + "," + str(assignment_id) + ")"
         student_grades = execute_statement(get_database_connection(), grade_statement)
@@ -122,7 +130,7 @@ def teacher_operations(teacher_id, operation):
 
 logged_in = True
 while logged_in == True:
-    type = input("Welcome. Are you a \n1. Student"
+    type = input("\nWelcome. Are you a \n1. Student"
                  "\n2. Teacher"
                  "\n3. Administrator\nEnter the Number that corresponds\n")
     if type == "1":
@@ -133,10 +141,21 @@ while logged_in == True:
                           "\n3. Overall Grade\n")
         student_operations(student_id, operation)
     elif type == "2":
+        print("Here are all valid teacher ids.")
+        teacher_valid = "SELECT teacher_id FROM TeacherSchedule WHERE classid_1 IS NOT NULL OR classid_6 IS NOT NULL;"
+        teacher_ids = execute_statement(get_database_connection(), teacher_valid)
+        valid_teacher_ids = []
+        for id in teacher_ids:
+            print("Valid Teacher ID: " + str(id[0]))
+            valid_teacher_ids.append(str(id[0]))
+            print()
         teacher_id = input("What is your teacher id?\n")
-        operation = input("Which operation do you want to perform? Select the number that corresponds with the operation"
-                          "\n1. Schedule"
-                          "\n2. Check All Student Grades\n")
-        teacher_operations(teacher_id, operation)
+        if teacher_id in valid_teacher_ids:
+            operation = input("Which operation do you want to perform? Select the number that corresponds with the operation"
+                              "\n1. Schedule"
+                              "\n2. Check All Student Grades\n")
+            teacher_operations(teacher_id, operation)
+        else:
+            print("Teacher ID is not a valid ID.")
 
 
